@@ -1,4 +1,5 @@
 import tkinter as tk
+import math
 
 # Основное окно
 root = tk.Tk()
@@ -40,29 +41,43 @@ def on_click(char):
         current = entry.get()
         if current:
             try:
-                # Пробуем преобразовать текущее значение в число
                 num = float(current)
-                # Меняем знак и обновляем поле
                 num = -num
-                # Убираем .0 у целых чисел для красоты
                 if num.is_integer():
                     num = int(num)
                 entry.delete(0, tk.END)
                 entry.insert(0, str(num))
             except ValueError:
-                # Если текущее значение не число, ничего не делаем
                 pass
+    elif char == '√':
+        clear_press_count = 0
+        current = entry.get()
+        if current:
+            try:
+                num = float(current)
+                if num < 0:
+                    entry.delete(0, tk.END)
+                    entry.insert(0, "Ошибка")
+                else:
+                    result = math.sqrt(num)
+                    if result.is_integer():
+                        result = int(result)
+                    entry.delete(0, tk.END)
+                    entry.insert(0, str(result))
+            except ValueError:
+                entry.delete(0, tk.END)
+                entry.insert(0, "Ошибка")
     else:
         clear_press_count = 0
         entry.insert(tk.END, char)
 
-# Кнопки с добавленной кнопкой ±
+# Кнопки с добавленными ± и √
 buttons = [
     ('7', '8', '9', '/'),
     ('4', '5', '6', '*'),
     ('1', '2', '3', '-'),
     ('0', '.', '=', '+'),
-    ('C', '⌫', '±')  # добавлена кнопка ±
+    ('C', '⌫', '±', '√')  # добавлена кнопка √
 ]
 
 # Рисуем кнопки
@@ -73,7 +88,7 @@ for r, row in enumerate(buttons, start=1):
         btn.grid(row=r, column=c, sticky="nsew")
 
 # Распределение веса по строкам и колонкам
-for i in range(6):  # теперь 6 строк, т.к. добавлена строка с кнопкой ±
+for i in range(6):
     root.grid_rowconfigure(i, weight=1)
 for i in range(4):
     root.grid_columnconfigure(i, weight=1)
