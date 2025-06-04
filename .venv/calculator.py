@@ -4,7 +4,7 @@ import math
 # Основное окно
 root = tk.Tk()
 root.title('Калькулятор')
-root.geometry("400x500")
+root.geometry("400x550")  # немного увеличена высота для новой кнопки
 
 # Поле ввода
 entry = tk.Entry(root, width=16, font=('Arial', 24), bd=10, relief=tk.RIDGE, justify='right')
@@ -67,17 +67,32 @@ def on_click(char):
             except ValueError:
                 entry.delete(0, tk.END)
                 entry.insert(0, "Ошибка")
+    elif char == 'x²':
+        clear_press_count = 0
+        current = entry.get()
+        if current:
+            try:
+                num = float(current)
+                result = num ** 2
+                if result.is_integer():
+                    result = int(result)
+                entry.delete(0, tk.END)
+                entry.insert(0, str(result))
+            except ValueError:
+                entry.delete(0, tk.END)
+                entry.insert(0, "Ошибка")
     else:
         clear_press_count = 0
         entry.insert(tk.END, char)
 
-# Кнопки с добавленными ± и √
+# Кнопки с добавленными ±, √ и x²
 buttons = [
     ('7', '8', '9', '/'),
     ('4', '5', '6', '*'),
     ('1', '2', '3', '-'),
     ('0', '.', '=', '+'),
-    ('C', '⌫', '±', '√')  # добавлена кнопка √
+    ('C', '⌫', '±', '√'),
+    ('x²',)  # новая кнопка в отдельной строке
 ]
 
 # Рисуем кнопки
@@ -88,7 +103,7 @@ for r, row in enumerate(buttons, start=1):
         btn.grid(row=r, column=c, sticky="nsew")
 
 # Распределение веса по строкам и колонкам
-for i in range(6):
+for i in range(len(buttons) + 1):  # количество строк с учётом новой
     root.grid_rowconfigure(i, weight=1)
 for i in range(4):
     root.grid_columnconfigure(i, weight=1)
