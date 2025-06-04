@@ -108,5 +108,5 @@ for i in range(len(buttons) + 1):  # количество строк с учёт
 for i in range(4):
     root.grid_columnconfigure(i, weight=1)
 
-# Запуск
+# Запуск cr
 root.mainloop()
