@@ -9,7 +9,6 @@ root.geometry("400x500")
 entry = tk.Entry(root, width=16, font=('Arial', 24), bd=10, relief=tk.RIDGE, justify='right')
 entry.grid(row=0, column=0, columnspan=4, padx=10, pady=20, sticky="nsew")
 
-# Переменная для подсчёта нажатий кнопки 'C'
 clear_press_count = 0
 
 def on_click(char):
@@ -20,7 +19,7 @@ def on_click(char):
             result = eval(entry.get())
             entry.delete(0, tk.END)
             entry.insert(0, str(result))
-            clear_press_count = 0  # сброс счётчика при успешном вычислении
+            clear_press_count = 0
         except Exception:
             entry.delete(0, tk.END)
             entry.insert(0, "Ошибка")
@@ -28,27 +27,42 @@ def on_click(char):
     elif char == 'C':
         clear_press_count += 1
         if clear_press_count == 1:
-            # Первый раз очищаем поле ввода
             entry.delete(0, tk.END)
         elif clear_press_count == 2:
-            # При двойном нажатии выводим сообщение и сбрасываем счётчик
             entry.delete(0, tk.END)
             entry.insert(0, "Полный сброс!")
             clear_press_count = 0
     elif char == '⌫':
         clear_press_count = 0
         entry.delete(len(entry.get()) - 1, tk.END)
+    elif char == '±':
+        clear_press_count = 0
+        current = entry.get()
+        if current:
+            try:
+                # Пробуем преобразовать текущее значение в число
+                num = float(current)
+                # Меняем знак и обновляем поле
+                num = -num
+                # Убираем .0 у целых чисел для красоты
+                if num.is_integer():
+                    num = int(num)
+                entry.delete(0, tk.END)
+                entry.insert(0, str(num))
+            except ValueError:
+                # Если текущее значение не число, ничего не делаем
+                pass
     else:
         clear_press_count = 0
         entry.insert(tk.END, char)
 
-# Кнопки
+# Кнопки с добавленной кнопкой ±
 buttons = [
     ('7', '8', '9', '/'),
     ('4', '5', '6', '*'),
     ('1', '2', '3', '-'),
     ('0', '.', '=', '+'),
-    ('C', '⌫')
+    ('C', '⌫', '±')  # добавлена кнопка ±
 ]
 
 # Рисуем кнопки
@@ -59,7 +73,7 @@ for r, row in enumerate(buttons, start=1):
         btn.grid(row=r, column=c, sticky="nsew")
 
 # Распределение веса по строкам и колонкам
-for i in range(5):
+for i in range(6):  # теперь 6 строк, т.к. добавлена строка с кнопкой ±
     root.grid_rowconfigure(i, weight=1)
 for i in range(4):
     root.grid_columnconfigure(i, weight=1)
