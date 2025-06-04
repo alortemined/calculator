@@ -98,7 +98,7 @@ buttons = [
 # Рисуем кнопки
 for r, row in enumerate(buttons, start=1):
     for c, char in enumerate(row):
-        btn = tk.Button(root, text=char, font=('Arial', 18), fg='white', bg='black',
+        btn = tk.Button(root, text=char, font=('Arial', 18), gf='red', bg='blue',
                         command=lambda ch=char: on_click(ch), padx=20, pady=20)
         btn.grid(row=r, column=c, sticky="nsew")
 
